@@ -11,10 +11,12 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "steven.site",
+    "steven.claverio.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://steven.site",
+    "https://steven.claverio.com",
 ]
 
 AWS_S3_ENDPOINT_URL = "http://nos.wjv-1.neo.id"

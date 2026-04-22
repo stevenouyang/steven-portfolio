@@ -1,11 +1,10 @@
 from django.http import JsonResponse, Http404
 from django.shortcuts import render
 
+
 def svelte_frontend(request, path=""):
-    """
-    Catch-all view that serves the SvelteKit index.html
-    """
     return render(request, "index.html")
+
 
 # Mock data store for the example
 MOCK_PROJECTS = [
@@ -27,8 +26,8 @@ MOCK_PROJECTS = [
         "images": [
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
-            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp"
-        ]
+            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
+        ],
     },
     {
         "id": 2,
@@ -48,8 +47,8 @@ MOCK_PROJECTS = [
         "images": [
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
-            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp"
-        ]
+            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
+        ],
     },
     {
         "id": 3,
@@ -69,8 +68,8 @@ MOCK_PROJECTS = [
         "images": [
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
-            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp"
-        ]
+            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
+        ],
     },
     {
         "id": 4,
@@ -84,14 +83,19 @@ MOCK_PROJECTS = [
         "service": "Full-Stack Development",
         "description": "Developing a robust, scalable web platform for a leading logistics company. The platform features real-time tracking and a comprehensive admin dashboard.",
         "about_desc": "FastFreight required a modern web platform to streamline their logistics operations. We built a custom solution that handles everything from order management to real-time driver tracking.",
-        "about_list": ["Frontend Development", "Backend Architecture", "API Integration", "Database Design"],
+        "about_list": [
+            "Frontend Development",
+            "Backend Architecture",
+            "API Integration",
+            "Database Design",
+        ],
         "overview_desc": "The new platform significantly improved FastFreight's operational efficiency. We utilized a modern tech stack to ensure high performance, security, and scalability.",
         "site_url": "https://example.com/fastfreight",
         "images": [
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
-            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp"
-        ]
+            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
+        ],
     },
     {
         "id": 5,
@@ -111,10 +115,11 @@ MOCK_PROJECTS = [
         "images": [
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
             "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
-            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp"
-        ]
-    }
+            "http://nos.wjv-1.neo.id/cors/CACHE/images/portfolio/main/Indopesona.id_-_Customer_Interface_2/c77c75a940ea63235b2943615f4cd3bb.webp",
+        ],
+    },
 ]
+
 
 def api_projects(request):
     """
@@ -123,16 +128,19 @@ def api_projects(request):
     # Return a simplified list for the index page to save bandwidth
     list_data = []
     for p in MOCK_PROJECTS:
-        list_data.append({
-            "id": p["id"],
-            "title": p["title"],
-            "category": p["category"],
-            "year": p["year"],
-            "image": p["image"],
-            "delay": p["delay"],
-            "fadeFrom": p["fadeFrom"]
-        })
+        list_data.append(
+            {
+                "id": p["id"],
+                "title": p["title"],
+                "category": p["category"],
+                "year": p["year"],
+                "image": p["image"],
+                "delay": p["delay"],
+                "fadeFrom": p["fadeFrom"],
+            }
+        )
     return JsonResponse({"projects": list_data})
+
 
 def api_project_detail(request, project_id):
     """
@@ -141,5 +149,5 @@ def api_project_detail(request, project_id):
     for p in MOCK_PROJECTS:
         if p["id"] == project_id:
             return JsonResponse({"project": p})
-            
+
     raise Http404("Project not found")
