@@ -40,6 +40,36 @@ STORAGES["staticfiles"][
 # Use S3 for static files in production
 STORAGES["staticfiles"]["BACKEND"] = "storages.backends.s3boto3.S3Boto3Storage"
 
+# Logging configuration for production to see errors in 'docker logs'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
+
+
 try:
     from .local import *
 except ImportError:

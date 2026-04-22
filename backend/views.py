@@ -15,13 +15,24 @@ def svelte_frontend(request, path=""):
         # SvelteKit dev server handles routing
         return redirect(f"{settings.VITE_DEV_SERVER}/{path}")
 
-    # Production build location
-    index_path = Path(settings.PROJECT_DIR) / "static" / "frontend" / "index.html"
+    # Try multiple potential locations for index.html
+    possible_paths = [
+        Path(settings.PROJECT_DIR) / "static" / "frontend" / "index.html",
+        Path(settings.BASE_DIR) / "static" / "frontend" / "index.html",
+        Path(settings.BASE_DIR) / "frontend" / "index.html",
+    ]
     
-    if not index_path.exists():
+    index_path = None
+    for p in possible_paths:
+        if p.exists():
+            index_path = p
+            break
+            
+    if not index_path:
         # Fallback if index.html is missing
         return HttpResponse(
-            "Frontend build not found. Please run 'npm run build' in the frontend directory.",
+            f"Frontend build not found. Checked: {[str(p) for p in possible_paths]}. "
+            "Please run 'npm run build' in the frontend directory.",
             status=404
         )
 
