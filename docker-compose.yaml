@@ -1,0 +1,50 @@
+services:
+  
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:8881:8000"
+    container_name: claverio_app_1
+    restart: always
+    env_file:
+      - .env
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-dibalikudangadabatu}
+      DB_NAME: ${DB_NAME:-dasawarsa}
+      DB_USER: ${DB_USER:-devadmin}
+      DB_PASSWORD: ${DB_PASSWORD:-testsatuduatiga}
+      DB_HOST: ${DB_HOST:-103.150.101.6}
+      DB_PORT: ${DB_PORT:-5431}
+    volumes:
+      - ./media:/app/media:rw
+      - ./static:/app/static:rw
+    networks:
+      - shared_network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"  # Restrict to 1 CPU core
+          memory: "512M"  # Optional: limit RAM to 512MB
+
+networks:
+  shared_network:
+    external: true
+
+#  db:
+#    image: postgres
+#    container_name: claverio_postgres
+#    restart: always
+#    ports:
+#      - '5432:5432'
+#    environment:
+#      POSTGRES_USER: devadmin
+#      POSTGRES_PASSWORD: testsatuduatiga
+#      POSTGRES_DB: claverioclient
+#    volumes:
+#    - vol_postgres:/var/lib/postgresql/data
+#
+#
+#volumes:
+#  vol_postgres:
