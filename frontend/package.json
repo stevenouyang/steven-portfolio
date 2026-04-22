@@ -6,6 +6,8 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
+		"build:dev": "vite build && rm -rf ../backend/static/app8 && mkdir -p ../backend/static/app8 && cp -R ../build/* ../backend/static/app8",
+		"build:prod": "ASSETS_URL=/app8 vite build && echo \"aws s3 sync ../build/ s3://app8/ --endpoint-url http://nos.wjv-1.neo.id --acl public-read\"",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"lint": "prettier --check . && eslint .",

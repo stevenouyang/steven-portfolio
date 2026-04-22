@@ -151,6 +151,7 @@ STATICFILES_FINDERS = [
 
 STATICFILES_DIRS = [
     PROJECT_DIR / "static",
+    BASE_DIR / "build",
 ]
 
 STATIC_ROOT = BASE_DIR / "static"
