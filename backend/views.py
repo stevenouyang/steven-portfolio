@@ -16,9 +16,9 @@ def svelte_frontend(request, path=""):
         return redirect(f"{settings.VITE_DEV_SERVER}/{path}")
 
     # Production build location
-    index_path = os.path.join(settings.PROJECT_DIR, "static", "frontend", "index.html")
+    index_path = Path(settings.PROJECT_DIR) / "static" / "frontend" / "index.html"
     
-    if not os.path.exists(index_path):
+    if not index_path.exists():
         # Fallback if index.html is missing
         return HttpResponse(
             "Frontend build not found. Please run 'npm run build' in the frontend directory.",
