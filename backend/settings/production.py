@@ -13,14 +13,22 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "steven.site",
     "steven.claverio.com",
+    "www.steven.claverio.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://steven.site",
     "https://steven.claverio.com",
+    "https://www.steven.claverio.com",
 ]
 
 AWS_S3_ENDPOINT_URL = "http://nos.wjv-1.neo.id"
+
+# Proxy settings for production (helps with 400 Bad Request)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+
 
 # ManifestStaticFilesStorage is recommended in production, to prevent
 # outdated JavaScript / CSS assets being served from cache
