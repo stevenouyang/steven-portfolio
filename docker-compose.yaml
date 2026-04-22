@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "127.0.0.1:8881:8000"
-    container_name: claverio_app_1
+    container_name: steven_app
     restart: always
     env_file:
       - .env
