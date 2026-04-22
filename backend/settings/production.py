@@ -40,6 +40,9 @@ STORAGES["staticfiles"][
 # Use S3 for static files in production
 STORAGES["staticfiles"]["BACKEND"] = "storages.backends.s3boto3.S3Boto3Storage"
 
+# Construct the S3 URL for static files
+STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
+
 # Logging configuration for production to see errors in 'docker logs'
 LOGGING = {
     'version': 1,
