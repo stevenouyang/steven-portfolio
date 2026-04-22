@@ -29,7 +29,9 @@ RUN pip install "gunicorn==20.0.4"
 
 # Install the project requirements.
 COPY requirements.txt /
-RUN pip install -r /requirements.txt
+RUN pip install -r /requirements.txt \
+    --extra-index-url https://pypi.claverio.com/simple/ \
+    --trusted-host pypi.claverio.com
 
 # Use /app folder as a directory where the source code is stored.
 WORKDIR /app
@@ -46,7 +48,7 @@ COPY --chown=wagtail:wagtail . .
 USER wagtail
 
 # Collect static files.
-RUN python manage.py collectstatic --noinput --clear
+# RUN python manage.py collectstatic --noinput --clear
 
 # Runtime command that executes when "docker run" is called, it does the
 # following:

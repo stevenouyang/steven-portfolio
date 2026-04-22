@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "moduloreactor",
     "modulotalks",
-    # "core",
+    "core",
     "storages",
 ]
 
