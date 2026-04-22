@@ -1,9 +1,45 @@
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import render
+from django.conf import settings
+from pathlib import Path
 
 
 def svelte_frontend(request, path=""):
-    return render(request, "index.html")
+    """Serve the Svelte build `index.html` and rewrite asset URLs to S3 when configured.
+
+    This reads `build/index.html` and replaces leading `/assets` and `/_app`
+    references with the configured `AWS_S3_ENDPOINT_URL` so the production
+    site points to the uploaded files on S3 (or S3-compatible endpoint).
+    """
+    build_index = Path(settings.BASE_DIR) / "build" / "index.html"
+    if not build_index.exists():
+        # Fall back to rendering a template if the static build isn't present
+        try:
+            return render(request, "index.html")
+        except Exception:
+            raise Http404("Svelte index not found")
+
+    content = build_index.read_text(encoding="utf-8")
+
+    s3_endpoint = getattr(settings, "AWS_S3_ENDPOINT_URL", "") or ""
+    s3_endpoint = s3_endpoint.rstrip("/")
+
+    if s3_endpoint:
+        # Replace common absolute references in the built HTML so they point
+        # to the S3 endpoint where `collectstatic` uploaded them.
+        content = content.replace('href="/_app', f'href="{s3_endpoint}/_app')
+        content = content.replace('href="/assets', f'href="{s3_endpoint}/assets')
+        content = content.replace("href='/_app", f"href='{s3_endpoint}/_app")
+        content = content.replace("href='/assets", f"href='{s3_endpoint}/assets")
+        content = content.replace('src="/_app', f'src="{s3_endpoint}/_app')
+        content = content.replace('src="/assets', f'src="{s3_endpoint}/assets')
+        content = content.replace("src='/_app", f"src='{s3_endpoint}/_app")
+        content = content.replace("src='/assets", f"src='{s3_endpoint}/assets")
+        # dynamic import() calls
+        content = content.replace('import("/_app', f'import("{s3_endpoint}/_app')
+        content = content.replace("import('/_app", f"import('{s3_endpoint}/_app")
+
+    return HttpResponse(content, content_type="text/html")
 
 
 # Mock data store for the example
