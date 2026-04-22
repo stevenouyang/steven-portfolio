@@ -23,6 +23,11 @@ urlpatterns = [
     
     # SvelteKit catch-all frontend route
     path("", views.svelte_frontend, name="svelte_frontend_root"),
+    
+    # Redirect Svelte static assets to S3
+    re_path(r'^_app/(?P<path>.*)$', views.svelte_static_redirect),
+    re_path(r'^assets/(?P<path>.*)$', views.svelte_static_redirect),
+
     re_path(r'^(?!api/|admin/|django-admin/|documents/|search/|static/|_app/|assets/).*$', views.svelte_frontend, name="svelte_frontend"),
 ]
 

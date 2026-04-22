@@ -64,6 +64,21 @@ def svelte_frontend(request, path=""):
     return HttpResponse(content, content_type="text/html")
 
 
+def svelte_static_redirect(request, path):
+    """
+    Redirects requests for /_app/... and /assets/... to S3.
+    This handles cases where scripts internally load other assets via absolute paths.
+    """
+    static_url = getattr(settings, "STATIC_URL", "/static/").rstrip("/")
+    
+    if static_url.startswith("http"):
+        from django.shortcuts import redirect
+        # Prepend 'frontend/' because that's where collectstatic puts Svelte assets
+        return redirect(f"{static_url}/frontend{request.path}", permanent=True)
+    
+    raise Http404("Static asset not found")
+
+
 # Mock data store for the example
 MOCK_PROJECTS = [
     {
