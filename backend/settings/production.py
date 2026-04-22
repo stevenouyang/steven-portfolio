@@ -3,6 +3,7 @@ import os
 from .base import *
 
 DEBUG = False
+SVELTE_DEV_MODE = False
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)

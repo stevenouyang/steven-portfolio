@@ -21,17 +21,9 @@ urlpatterns = [
     path("api/projects/", views.api_projects, name="api_projects"),
     path("api/projects/<int:project_id>/", views.api_project_detail, name="api_project_detail"),
     
-    # Serve SvelteKit static assets directly
-    re_path(r'^_app/(?P<path>.*)$', serve, {
-        'document_root': os.path.join(settings.BASE_DIR, 'build', '_app'),
-    }),
-    re_path(r'^assets/(?P<path>.*)$', serve, {
-        'document_root': os.path.join(settings.BASE_DIR, 'build', 'assets'),
-    }),
-    
     # SvelteKit catch-all frontend route
     path("", views.svelte_frontend, name="svelte_frontend_root"),
-    re_path(r'^(?!api/|admin/|django-admin/|documents/|search/|_app/|assets/).*$', views.svelte_frontend, name="svelte_frontend"),
+    re_path(r'^(?!api/|admin/|django-admin/|documents/|search/|static/|_app/|assets/).*$', views.svelte_frontend, name="svelte_frontend"),
 ]
 
 if settings.DEBUG:

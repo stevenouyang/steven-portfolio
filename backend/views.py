@@ -5,40 +5,51 @@ from pathlib import Path
 
 
 def svelte_frontend(request, path=""):
-    """Serve the Svelte build `index.html` and rewrite asset URLs to S3 when configured.
-
-    This reads `build/index.html` and replaces leading `/assets` and `/_app`
-    references with the configured `AWS_S3_ENDPOINT_URL` so the production
-    site points to the uploaded files on S3 (or S3-compatible endpoint).
     """
-    build_index = Path(settings.BASE_DIR) / "build" / "index.html"
-    if not build_index.exists():
-        # Fall back to rendering a template if the static build isn't present
-        try:
-            return render(request, "index.html")
-        except Exception:
-            raise Http404("Svelte index not found")
+    Serves the SvelteKit frontend.
+    In DEV: Redirects to the Vite dev server for HMR.
+    In PROD: Serves the built index.html from static/frontend.
+    """
+    if settings.DEBUG and getattr(settings, 'SVELTE_DEV_MODE', False):
+        from django.shortcuts import redirect
+        # SvelteKit dev server handles routing
+        return redirect(f"{settings.VITE_DEV_SERVER}/{path}")
 
-    content = build_index.read_text(encoding="utf-8")
+    # Production build location
+    index_path = os.path.join(settings.PROJECT_DIR, "static", "frontend", "index.html")
+    
+    if not os.path.exists(index_path):
+        # Fallback if index.html is missing
+        return HttpResponse(
+            "Frontend build not found. Please run 'npm run build' in the frontend directory.",
+            status=404
+        )
 
-    s3_endpoint = getattr(settings, "AWS_S3_ENDPOINT_URL", "") or ""
-    s3_endpoint = s3_endpoint.rstrip("/")
+    with open(index_path, "r", encoding="utf-8") as f:
+        content = f.read()
 
-    if s3_endpoint:
-        # Replace common absolute references in the built HTML so they point
-        # to the S3 endpoint where `collectstatic` uploaded them.
-        content = content.replace('href="/_app', f'href="{s3_endpoint}/_app')
-        content = content.replace('href="/assets', f'href="{s3_endpoint}/assets')
-        content = content.replace("href='/_app", f"href='{s3_endpoint}/_app")
-        content = content.replace("href='/assets", f"href='{s3_endpoint}/assets")
-        content = content.replace('src="/_app', f'src="{s3_endpoint}/_app')
-        content = content.replace('src="/assets', f'src="{s3_endpoint}/assets')
-        content = content.replace("src='/_app", f"src='{s3_endpoint}/_app")
-        content = content.replace("src='/assets", f"src='{s3_endpoint}/assets")
-        # dynamic import() calls
-        content = content.replace('import("/_app', f'import("{s3_endpoint}/_app')
-        content = content.replace("import('/_app", f"import('{s3_endpoint}/_app")
-
+    # If serving from S3 in production, the index.html should ideally have correct 
+    # relative paths or we can inject the STATIC_URL prefix here if needed.
+    # Since the user mentioned S3/CloudFront for static files, we'll ensure
+    # that paths like /_app and /assets are prefixed with STATIC_URL if they aren't already.
+    
+    static_url = getattr(settings, "STATIC_URL", "/static/").rstrip("/")
+    # Note: SvelteKit assets in static/frontend will be at /static/frontend/_app/...
+    
+    # Simple replacement for absolute paths to point to Django's static location
+    # We replace common asset prefixes to ensure they point to the static subfolder.
+    replacements = {
+        'href="/_app': f'href="{static_url}/frontend/_app',
+        'href="/assets': f'href="{static_url}/frontend/assets',
+        'src="/_app': f'src="{static_url}/frontend/_app',
+        'src="/assets': f'src="{static_url}/frontend/assets',
+        'import("/_app': f'import("{static_url}/frontend/_app',
+        'import(\'/_app': f'import(\'{static_url}/frontend/_app',
+    }
+    
+    for old, new in replacements.items():
+        content = content.replace(old, new)
+    
     return HttpResponse(content, content_type="text/html")
 
 

@@ -14,6 +14,10 @@ SECRET_KEY = "django-insecure-ek$s3(9)znsw^v@t5&mbj4n_hu3iz7-1fc)wmt5_0+nxh1a+!!
 # SECURITY WARNING: define the correct hosts in production!
 ALLOWED_HOSTS = ["*"]
 
+# Svelte Integration
+SVELTE_DEV_MODE = True
+VITE_DEV_SERVER = 'http://localhost:5173'
+
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 STATICFILES_DIRS = [

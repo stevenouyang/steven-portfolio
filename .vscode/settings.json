@@ -1,5 +1,10 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:conda",
     "python-envs.defaultPackageManager": "ms-python.python:conda",
-    "folder-color.pathColors": []
+    "folder-color.pathColors": [],
+    "s3x.accessKeyId": "009ed54e444dc9645ab3",
+    "s3x.secretAccessKey": "FRaaDb55PRWIEyYPjTIrykKhB3FePmciINPGXmvI",
+    "s3x.endpointUrl": "https://nos.wjv-1.neo.id",
+    "s3x.forcePathStyle": true,
+    "s3x.region": "wjv-1"
 }

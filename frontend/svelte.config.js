@@ -9,8 +9,8 @@ const config = {
 	kit: {
 		adapter: adapter({
 			fallback: 'index.html', // SPA fallback page
-			pages: '../build',
-			assets: '../build',
+			pages: '../backend/static/frontend',
+			assets: '../backend/static/frontend',
 			precompress: false,
 			strict: true
 		}),
